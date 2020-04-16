@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import SymptonChecklist from './components/SymptonChecklist/SymptonChecklist';
+import SymptonChecker from './components/SymptonChecker/SymptonChecker';
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
         </a>
       </header>
 
-      <SymptonChecklist />
+      <SymptonChecker />
     </div>
   );
 }

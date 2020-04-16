@@ -1,8 +1,9 @@
 import React, { Component, FormEvent } from 'react';
 import Checklist from './Checklist/Checklist';
 
-class SymptonChecklist extends Component {
+class FormComponent extends Component {
   handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     console.log(document.getElementById("id1"));
   }
   render() {
@@ -10,10 +11,11 @@ class SymptonChecklist extends Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <Checklist id="id1" label="label1" />
+          <button type="submit">Submit</button>
         </form>
       </div>
     )
   }
 }
 
-export default SymptonChecklist;
+export default FormComponent;
