@@ -25,7 +25,9 @@ interface State {
     age: number | null;
     country: string | null;
     municipality: string | null;
-  }
+  },
+  currentStep: number;
+  formSteps: JSX.Element[];
 }
 
 class SymptonChecker extends Component<{}, State> {
@@ -56,19 +58,55 @@ class SymptonChecker extends Component<{}, State> {
         age: null,
         country: null,
         municipality: null,
-      }
+      },
+      currentStep: 0,
+      formSteps: [
+        <FormComponent 
+          inputs={["age", "country", "municipality"]}
+          title={"Demographics"}
+          description={"Put your name and description so we know who u are"}
+          next={this.next}
+          back={this.back} />,
+        <FormComponent 
+          inputs={["severeBreathing", "severeFever", "severePressure"]}
+          title={"Severe Symptons"}
+          description={"Are you experiencing any of these"}
+          next={this.next}
+          back={this.back} />,
+        <FormComponent 
+          inputs={["cough", "fever"]}
+          title={"Symptons"}
+          description={"Do you have any of this"} 
+          next={this.next}
+          back={this.back} />,
+        <FormComponent 
+          inputs={["travel", "directContact", "work"]}
+          title={"Contact"}
+          description={"Have you been in contact"} 
+          next={this.next}
+          back={this.back} />,
+        <FormComponent
+          inputs={["highBloodPressure", "extremeObesity", "asthma", "heartProblems"]}
+          title={"Preexisting conditions"}
+          description={"Do you have any of these pre existing conditions?"} 
+          next={this.next}
+          back={this.back} />,
+      ],
     }
+  }
+  currentForm = () => {
+    return this.state.formSteps[this.state.currentStep];
+  }
+  next = () => {
+    if (this.state.currentStep < this.state.formSteps.length - 1) this.setState({currentStep: this.state.currentStep + 1});
+  }
+  back = () => {
+    if (this.state.currentStep > 0) this.setState({currentStep: this.state.currentStep - 1});
   }
   render() {
     return (
       <div>
-        <FormComponent />
-        <FormComponent />
-        <FormComponent />
-        <FormComponent />
-        <FormComponent />
-        <FormComponent />
-        <FormComponent />
+        {this.currentForm()}
       </div>
     )
   }

@@ -1,21 +1,36 @@
-import React, { Component, FormEvent } from 'react';
+import React, { FormEvent } from 'react';
 import Checklist from './Checklist/Checklist';
 
-class FormComponent extends Component {
-  handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(document.getElementById("id1"));
-  }
-  render() {
-    return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <Checklist id="id1" label="label1" />
-          <button type="submit">Submit</button>
-        </form>
-      </div>
-    )
-  }
+interface Props {
+  inputs: string[];
+  title: string;
+  description: string;
+  back: () => void;
+  next: () => void;
+}
+
+const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  console.log(document.getElementById("id1"));
+}
+
+const FormComponent:React.FC<Props> = ({inputs, title, description, back, next}) => {
+  return (
+    <div>
+      <span><a href="#" onClick={back}>Back</a></span><span><a href="#" onClick={next}>Next</a></span>
+      <form onSubmit={handleSubmit}>
+        <h1>{title}</h1>
+        <p>{description}</p>
+        <ul>
+          {inputs.map(input => {
+            return <li>{input}</li>;
+          })}
+        </ul>
+        <Checklist id="id1" label="label1" />
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  )
 }
 
 export default FormComponent;
