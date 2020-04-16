@@ -5,8 +5,6 @@ interface Props {
   inputs: string[];
   title: string;
   description: string;
-  back: () => void;
-  next: () => void;
 }
 
 const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -14,10 +12,9 @@ const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
   console.log(document.getElementById("id1"));
 }
 
-const FormComponent:React.FC<Props> = ({inputs, title, description, back, next}) => {
+const FormComponent:React.FC<Props> = ({inputs, title, description}) => {
   return (
     <div>
-      <span><a href="#" onClick={back}>Back</a></span><span><a href="#" onClick={next}>Next</a></span>
       <form onSubmit={handleSubmit}>
         <h1>{title}</h1>
         <p>{description}</p>
