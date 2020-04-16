@@ -76,20 +76,26 @@ class SymptonChecker extends Component<{}, State> {
           inputs={["severeBreathing", "severeFever", "severePressure"]}
           title={"Severe Symptons"}
           description={"Are you experiencing any of these"}
+          multiple={true}
+          changeCheckbox={this.changeCheckbox}
          />,
         <FormComponent 
           inputs={["cough", "fever"]}
           title={"Symptons"}
           description={"Do you have any of this"} 
+          changeCheckbox={this.changeCheckbox}
         />,
         <FormComponent 
           inputs={["travel", "directContact", "work"]}
           title={"Contact"}
-          description={"Have you been in contact"}  />,
+          description={"Have you been in contact"}
+          changeCheckbox={this.changeCheckbox}
+          />,
         <FormComponent
           inputs={["highBloodPressure", "extremeObesity", "asthma", "heartProblems"]}
           title={"Preexisting conditions"}
           description={"Do you have any of these pre existing conditions?"} 
+          changeCheckbox={this.changeCheckbox}
            />,
       ],
     }
@@ -151,30 +157,54 @@ class SymptonChecker extends Component<{}, State> {
       highRiskAge: boolean | null;    
   
       [key: string]: boolean | null;
-    } = {
-      severeBreathing: null,
-      severeFever: null,
-      severePressure: null,
+    } = this.state.symptons;
 
-      cough: null,
-      fever: null,
-
-      travel: null,
-      directContact: null,
-      work: null,
-
-      highBloodPressure: null,
-      asthma: null,
-      extremeObesity: null,
-      heartProblems: null,
-
-      highRiskAge: null,    
-    }
     symptons["highRiskAge"] = highRiskAge
     this.setState({
       demographics,      
       symptons,
     });  
+  }
+  changeCheckbox = (e: ChangeEvent<HTMLInputElement>, id?:string) => {
+    let symptons: {
+      severeBreathing: boolean | null;
+      severeFever: boolean | null;
+      severePressure: boolean | null;
+    
+      cough: boolean | null;
+      fever: boolean | null,
+    
+      travel: boolean | null;
+      directContact: boolean | null;
+      work: boolean | null;
+    
+      highBloodPressure: boolean | null;
+      asthma: boolean | null;
+      extremeObesity: boolean | null;
+      heartProblems: boolean | null;
+  
+      highRiskAge: boolean | null;    
+  
+      [key: string]: boolean | null;
+    } = this.state.symptons;
+    if (id) {
+      console.log('changeCheckbox', e.target.checked, id)
+      symptons[id] = e.target.checked;
+      this.setState({ symptons })
+    } else {
+      console.log('changeRadio', e.target.value)
+      if(e.target.value == "Both"){
+        symptons["cough"] = true;
+        symptons["fever"] = true;        
+      } else if (e.target.value !== "None") {
+        symptons[e.target.value] = true;
+      } else {
+        symptons["cough"] = false;
+        symptons["fever"] = false;  
+      }
+      console.log(symptons, "symptons");
+      this.setState({ symptons })
+    }
   }
   getRiskAge(){
     if(this.state.symptons.highRiskAge !== null){
@@ -192,6 +222,11 @@ class SymptonChecker extends Component<{}, State> {
           <span>{this.state.demographics.country}</span>
           <span>{this.state.demographics.age}</span>
           <span>{this.getRiskAge()}</span>
+          <span>{cough && "Patient has cough"}</span>
+          <span>{fever && "Patient has fever"}</span>
+          <span>{severeBreathing && "Patient has severeBreathing"}</span>
+          <span>{severeFever && "Patient has severeFever"}</span>          
+          <span>{severePressure && "Patient has severePressure"}</span>
         </div>
         {this.currentForm()}
       </div>
