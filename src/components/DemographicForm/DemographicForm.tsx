@@ -1,6 +1,6 @@
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, FormEvent} from 'react';
 import './DemographicForm.css'
-import { TextField } from '@material-ui/core';
+import { TextField, Button, FormControl } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { allCountries } from '../../countries';
 
@@ -9,24 +9,28 @@ interface Props {
   description: string;  
   onChangeSelect: (event: ChangeEvent<{}>, value: string | null, id:string,) => void;
   onChangeAge: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, id: string) => void;
+  onSubmitDemographics: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-const DemographicForm:React.FC<Props> = ({onChangeSelect, onChangeAge}) => {
+const DemographicForm:React.FC<Props> = ({onChangeSelect, onChangeAge, onSubmitDemographics}) => {
   return (
     <div>
       <div>
-        <form className="form">
-          <TextField label="Age" type="number" 
-            onChange={(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChangeAge(event, "age")}          
-          />
-          <Autocomplete
-            className="autocomplete"
-            id="combo-box-demo"
-            options={allCountries.sort()}
-            onChange={(event: ChangeEvent<{}>, value: string | null) => onChangeSelect(event, value, "country")}
-            renderInput={(params) => <TextField {...params} variant="outlined" />}
-            // value={this.state[data.id]}
-          />
+        <form onSubmit={onSubmitDemographics}>
+          <div className="DemographicForm-inputs-container">
+            <TextField label="Age" type="number" 
+              onChange={(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChangeAge(event, "age")}          
+            />
+            <Autocomplete
+              className="DemographicForm-autocomplete"
+              id="combo-box-demo"
+              options={allCountries.sort()}
+              onChange={(event: ChangeEvent<{}>, value: string | null) => onChangeSelect(event, value, "country")}
+              renderInput={(params) => <TextField {...params} variant="outlined" />}
+              // value={this.state[data.id]}
+            />
+          </div>
+          <Button type="submit" variant="outlined">Submit</Button>
         </form>
       </div>
     </div>

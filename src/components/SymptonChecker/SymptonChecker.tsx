@@ -1,7 +1,29 @@
-import React, { Component, ChangeEvent } from 'react';
+import React, { Component, ChangeEvent, FormEvent } from 'react';
 import './SymptonChecker.css';
 import FormComponent from '../FormComponent/FormComponent';
 import DemographicForm from '../DemographicForm/DemographicForm';
+
+interface Symptons {
+    severeBreathing: boolean | null | undefined;
+    severeFever: boolean | null | undefined;
+    severePressure: boolean | null | undefined;
+  
+    cough: boolean | null | undefined;
+    fever: boolean | null,
+  
+    travel: boolean | null | undefined;
+    directContact: boolean | null | undefined;
+    work: boolean | null | undefined;
+  
+    highBloodPressure: boolean | null | undefined;
+    asthma: boolean | null | undefined;
+    extremeObesity: boolean | null | undefined;
+    heartProblems: boolean | null | undefined;
+
+    highRiskAge: boolean | null | undefined;    
+
+    [key: string]: boolean | null | undefined;
+}
 
 interface State {
   symptons : {
@@ -71,13 +93,15 @@ class SymptonChecker extends Component<{}, State> {
           description={"Put your name and description so we know who u are"}
           onChangeSelect={this.onChangeSelect}
           onChangeAge={this.onChangeAge}
-          />,
+          onSubmitDemographics={this.onSubmitDemographics}
+        />,
         <FormComponent 
           inputs={["severeBreathing", "severeFever", "severePressure"]}
           title={"Severe Symptons"}
           description={"Are you experiencing any of these"}
           multiple={true}
           changeCheckbox={this.changeCheckbox}
+          symptonValue={this.getSymptonValue()}
          />,
         <FormComponent 
           inputs={["cough", "fever"]}
@@ -90,12 +114,17 @@ class SymptonChecker extends Component<{}, State> {
           title={"Contact"}
           description={"Have you been in contact"}
           changeCheckbox={this.changeCheckbox}
+          multiple={true}
+          symptonsState={this.getSymptonsState()}
           />,
         <FormComponent
           inputs={["highBloodPressure", "extremeObesity", "asthma", "heartProblems"]}
           title={"Preexisting conditions"}
           description={"Do you have any of these pre existing conditions?"} 
           changeCheckbox={this.changeCheckbox}
+          multiple={true}
+          symptonsState={this.state && this.state.symptons}
+
            />,
       ],
     }
@@ -165,6 +194,12 @@ class SymptonChecker extends Component<{}, State> {
       symptons,
     });  
   }
+  onSubmitDemographics = (e: FormEvent<HTMLFormElement>):void => {
+    console.log("onSubmitDemographics called")
+    if(this.state.demographics.age && this.state.demographics.country){
+      this.setState({currentStep: this.state.currentStep + 1});
+    }
+  }
   changeCheckbox = (e: ChangeEvent<HTMLInputElement>, id?:string) => {
     let symptons: {
       severeBreathing: boolean | null;
@@ -188,11 +223,13 @@ class SymptonChecker extends Component<{}, State> {
       [key: string]: boolean | null;
     } = this.state.symptons;
     if (id) {
-      console.log('changeCheckbox', e.target.checked, id)
+      console.log('changeCheckbox', e.target.checked, id, this.state.symptons)
       symptons[id] = e.target.checked;
       this.setState({ symptons })
     } else {
       console.log('changeRadio', e.target.value)
+      symptons["cough"] = false;
+      symptons["fever"] = false;  
       if(e.target.value == "Both"){
         symptons["cough"] = true;
         symptons["fever"] = true;        
@@ -206,9 +243,31 @@ class SymptonChecker extends Component<{}, State> {
       this.setState({ symptons })
     }
   }
-  getRiskAge(){
+  getRiskAge = () => {
     if(this.state.symptons.highRiskAge !== null){
       return this.state.symptons.highRiskAge ? "High risk age" : "No risk age";
+    }
+  }
+  getSymptonValue = ():string => {
+    if(this.state){
+      if(this.state.symptons.fever && this.state.symptons.cough){
+        return "Both";
+      } else if (this.state.symptons.fever) {
+        return "Fever";
+      } else if (this.state.symptons.cough) {
+        return "Cough";
+      } else {
+        return "None";
+      }
+    } else {
+      return "";
+    }
+  }
+  getSymptonsState = ():Symptons | null => {
+    if(this.state){
+      return this.state.symptons;
+    } else {
+      return null;
     }
   }
   render() {
