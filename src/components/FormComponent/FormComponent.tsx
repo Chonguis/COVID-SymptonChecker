@@ -8,7 +8,7 @@ interface Props {
   title: string;
   description: string;
   multiple?: boolean;
-  symptonValue?: string;
+  symptonValue: string;
   changeCheckbox: (e: ChangeEvent<HTMLInputElement>, id?: string) => void;
   symptonsState?: {
     severeBreathing: boolean | undefined;
@@ -31,11 +31,6 @@ interface Props {
 
     [key: string]: boolean | undefined;
   }
-}
-
-const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  console.log(document.getElementById("id1"));
 }
 
 const FormComponent:React.FC<Props> = ({inputs, title, description, multiple, changeCheckbox, symptonValue, symptonsState }) => {

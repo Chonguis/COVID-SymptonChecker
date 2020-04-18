@@ -136,7 +136,7 @@ class SymptonChecker extends Component<{}, State> {
     });  
   }
   onSubmitDemographics = (e: FormEvent<HTMLFormElement>):void => {
-    console.log("onSubmitDemographics called")
+    e.preventDefault();
     if(this.state.demographics.age && this.state.demographics.country){
       this.setState({currentStep: this.state.currentStep + 1});
     }
@@ -144,11 +144,9 @@ class SymptonChecker extends Component<{}, State> {
   changeCheckbox = (e: ChangeEvent<HTMLInputElement>, id?:string) => {
     let symptons: Symptons = this.state.symptons;
     if (id) {
-      console.log('changeCheckbox', e.target.checked, id, this.state.symptons)
       symptons[id] = e.target.checked;
       this.setState({ symptons })
     } else {
-      console.log('changeRadio', e.target.value)
       symptons["cough"] = false;
       symptons["fever"] = false;  
       if(e.target.value == "Both"){
@@ -160,7 +158,6 @@ class SymptonChecker extends Component<{}, State> {
         symptons["cough"] = false;
         symptons["fever"] = false;  
       }
-      console.log(symptons, "symptons");
       this.setState({ symptons })
     }
   }
@@ -200,6 +197,8 @@ class SymptonChecker extends Component<{}, State> {
         onChangeSelect={this.onChangeSelect}
         onChangeAge={this.onChangeAge}
         onSubmitDemographics={this.onSubmitDemographics}
+        autocompleteVal={this.state.demographics.country}
+        ageVal={this.state.demographics.age}
       />,
       <FormComponent 
         inputs={["severeBreathing", "severeFever", "severePressure"]}
@@ -215,6 +214,7 @@ class SymptonChecker extends Component<{}, State> {
         title={"Symptons"}
         description={"Do you have any of this"} 
         changeCheckbox={this.changeCheckbox}
+        symptonValue={this.getSymptonValue()}
       />,
       <FormComponent 
         inputs={["travel", "directContact", "work"]}
@@ -223,6 +223,7 @@ class SymptonChecker extends Component<{}, State> {
         changeCheckbox={this.changeCheckbox}
         multiple={true}
         symptonsState={this.state.symptons}
+        symptonValue={this.getSymptonValue()}
         />,
       <FormComponent
         inputs={["highBloodPressure", "extremeObesity", "asthma", "heartProblems"]}
@@ -230,7 +231,9 @@ class SymptonChecker extends Component<{}, State> {
         description={"Do you have any of these pre existing conditions?"} 
         changeCheckbox={this.changeCheckbox}
         multiple={true}
-        symptonsState={this.state.symptons} />,
+        symptonsState={this.state.symptons}
+        symptonValue={this.getSymptonValue()}
+        />,
       <Results symptons={this.state.symptons} />
     ];
     let { severeBreathing, severeFever, severePressure, cough, fever, travel, directContact, work, highBloodPressure, asthma, extremeObesity, heartProblems, highRiskAge } = this.state.symptons;
