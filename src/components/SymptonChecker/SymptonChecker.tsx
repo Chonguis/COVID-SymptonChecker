@@ -2,50 +2,51 @@ import React, { Component, ChangeEvent, FormEvent } from 'react';
 import './SymptonChecker.css';
 import FormComponent from '../FormComponent/FormComponent';
 import DemographicForm from '../DemographicForm/DemographicForm';
+import Results from '../Results/Results';
 
 interface Symptons {
-    severeBreathing: boolean | null | undefined;
-    severeFever: boolean | null | undefined;
-    severePressure: boolean | null | undefined;
+    severeBreathing: boolean | undefined;
+    severeFever: boolean | undefined;
+    severePressure: boolean | undefined;
   
-    cough: boolean | null | undefined;
-    fever: boolean | null,
+    cough: boolean | undefined;
+    fever: boolean | undefined,
   
-    travel: boolean | null | undefined;
-    directContact: boolean | null | undefined;
-    work: boolean | null | undefined;
+    travel: boolean | undefined;
+    directContact: boolean | undefined;
+    work: boolean | undefined;
   
-    highBloodPressure: boolean | null | undefined;
-    asthma: boolean | null | undefined;
-    extremeObesity: boolean | null | undefined;
-    heartProblems: boolean | null | undefined;
+    highBloodPressure: boolean | undefined;
+    asthma: boolean | undefined;
+    extremeObesity: boolean | undefined;
+    heartProblems: boolean | undefined;
 
-    highRiskAge: boolean | null | undefined;    
+    highRiskAge: boolean | undefined;    
 
-    [key: string]: boolean | null | undefined;
+    [key: string]: boolean | undefined;
 }
 
 interface State {
   symptons : {
-    severeBreathing: boolean | null;
-    severeFever: boolean | null;
-    severePressure: boolean | null;
+    severeBreathing: boolean | undefined;
+    severeFever: boolean | undefined;
+    severePressure: boolean | undefined;
   
-    cough: boolean | null;
-    fever: boolean | null,
+    cough: boolean | undefined;
+    fever: boolean | undefined;
   
-    travel: boolean | null;
-    directContact: boolean | null;
-    work: boolean | null;
+    travel: boolean | undefined;
+    directContact: boolean | undefined;
+    work: boolean | undefined;
   
-    highBloodPressure: boolean | null;
-    asthma: boolean | null;
-    extremeObesity: boolean | null;
-    heartProblems: boolean | null;
+    highBloodPressure: boolean | undefined;
+    asthma: boolean | undefined;
+    extremeObesity: boolean | undefined;
+    heartProblems: boolean | undefined;
 
-    highRiskAge: boolean | null;    
+    highRiskAge: boolean | undefined;    
 
-    [key: string]: boolean | null;
+    [key: string]: boolean | undefined;
   },
   demographics: {
     age: string | null;
@@ -53,7 +54,7 @@ interface State {
     municipality: string | null;
   },
   currentStep: number;
-  formSteps: JSX.Element[];
+  formStepsLength: number;
 }
 
 class SymptonChecker extends Component<{}, State> {
@@ -62,23 +63,23 @@ class SymptonChecker extends Component<{}, State> {
 
     this.state = {
       symptons: {
-        severeBreathing: null,
-        severeFever: null,
-        severePressure: null,
+        severeBreathing: undefined,
+        severeFever: undefined,
+        severePressure: undefined,
   
-        cough: null,
-        fever: null,
+        cough: undefined,
+        fever: undefined,
   
-        travel: null,
-        directContact: null,
-        work: null,
+        travel: undefined,
+        directContact: undefined,
+        work: undefined,
   
-        highBloodPressure: null,
-        asthma: null,
-        extremeObesity: null,
-        heartProblems: null,
+        highBloodPressure: undefined,
+        asthma: undefined,
+        extremeObesity: undefined,
+        heartProblems: undefined,
 
-        highRiskAge: null,
+        highRiskAge: undefined,
       },
       demographics: {
         age: null,
@@ -86,54 +87,14 @@ class SymptonChecker extends Component<{}, State> {
         municipality: null,
       },
       currentStep: 0,
-      formSteps: [
-        <DemographicForm 
-          // inputs={["age", "country", "municipality"]}
-          title={"Demographics"}
-          description={"Put your name and description so we know who u are"}
-          onChangeSelect={this.onChangeSelect}
-          onChangeAge={this.onChangeAge}
-          onSubmitDemographics={this.onSubmitDemographics}
-        />,
-        <FormComponent 
-          inputs={["severeBreathing", "severeFever", "severePressure"]}
-          title={"Severe Symptons"}
-          description={"Are you experiencing any of these"}
-          multiple={true}
-          changeCheckbox={this.changeCheckbox}
-          symptonValue={this.getSymptonValue()}
-         />,
-        <FormComponent 
-          inputs={["cough", "fever"]}
-          title={"Symptons"}
-          description={"Do you have any of this"} 
-          changeCheckbox={this.changeCheckbox}
-        />,
-        <FormComponent 
-          inputs={["travel", "directContact", "work"]}
-          title={"Contact"}
-          description={"Have you been in contact"}
-          changeCheckbox={this.changeCheckbox}
-          multiple={true}
-          symptonsState={this.getSymptonsState()}
-          />,
-        <FormComponent
-          inputs={["highBloodPressure", "extremeObesity", "asthma", "heartProblems"]}
-          title={"Preexisting conditions"}
-          description={"Do you have any of these pre existing conditions?"} 
-          changeCheckbox={this.changeCheckbox}
-          multiple={true}
-          symptonsState={this.state && this.state.symptons}
-
-           />,
-      ],
+      formStepsLength: 0,
     }
   }
-  currentForm = () => {
-    return this.state.formSteps[this.state.currentStep];
+  currentForm = (formSteps: JSX.Element[]) => {
+    return formSteps[this.state.currentStep];
   }
   next = () => {
-    if (this.state.currentStep < this.state.formSteps.length - 1) this.setState({currentStep: this.state.currentStep + 1});
+    if (this.state.currentStep < 5) this.setState({currentStep: this.state.currentStep + 1});
   }
   back = () => {
     if (this.state.currentStep > 0) this.setState({currentStep: this.state.currentStep - 1});
@@ -166,27 +127,7 @@ class SymptonChecker extends Component<{}, State> {
     } else {
       highRiskAge=false;
     }
-    let symptons: {
-      severeBreathing: boolean | null;
-      severeFever: boolean | null;
-      severePressure: boolean | null;
-    
-      cough: boolean | null;
-      fever: boolean | null,
-    
-      travel: boolean | null;
-      directContact: boolean | null;
-      work: boolean | null;
-    
-      highBloodPressure: boolean | null;
-      asthma: boolean | null;
-      extremeObesity: boolean | null;
-      heartProblems: boolean | null;
-  
-      highRiskAge: boolean | null;    
-  
-      [key: string]: boolean | null;
-    } = this.state.symptons;
+    let symptons: Symptons = this.state.symptons;
 
     symptons["highRiskAge"] = highRiskAge
     this.setState({
@@ -201,27 +142,7 @@ class SymptonChecker extends Component<{}, State> {
     }
   }
   changeCheckbox = (e: ChangeEvent<HTMLInputElement>, id?:string) => {
-    let symptons: {
-      severeBreathing: boolean | null;
-      severeFever: boolean | null;
-      severePressure: boolean | null;
-    
-      cough: boolean | null;
-      fever: boolean | null,
-    
-      travel: boolean | null;
-      directContact: boolean | null;
-      work: boolean | null;
-    
-      highBloodPressure: boolean | null;
-      asthma: boolean | null;
-      extremeObesity: boolean | null;
-      heartProblems: boolean | null;
-  
-      highRiskAge: boolean | null;    
-  
-      [key: string]: boolean | null;
-    } = this.state.symptons;
+    let symptons: Symptons = this.state.symptons;
     if (id) {
       console.log('changeCheckbox', e.target.checked, id, this.state.symptons)
       symptons[id] = e.target.checked;
@@ -263,14 +184,55 @@ class SymptonChecker extends Component<{}, State> {
       return "";
     }
   }
-  getSymptonsState = ():Symptons | null => {
+  getSymptonsState = ():Symptons | undefined => {
     if(this.state){
       return this.state.symptons;
     } else {
-      return null;
+      return undefined;
     }
   }
   render() {
+    const formSteps: JSX.Element[] = [
+      <DemographicForm 
+        // inputs={["age", "country", "municipality"]}
+        title={"Demographics"}
+        description={"Put your name and description so we know who u are"}
+        onChangeSelect={this.onChangeSelect}
+        onChangeAge={this.onChangeAge}
+        onSubmitDemographics={this.onSubmitDemographics}
+      />,
+      <FormComponent 
+        inputs={["severeBreathing", "severeFever", "severePressure"]}
+        title={"Severe Symptons"}
+        description={"Are you experiencing any of these"}
+        multiple={true}
+        changeCheckbox={this.changeCheckbox}
+        symptonValue={this.getSymptonValue()}
+        symptonsState={this.state.symptons}
+       />,
+      <FormComponent 
+        inputs={["cough", "fever"]}
+        title={"Symptons"}
+        description={"Do you have any of this"} 
+        changeCheckbox={this.changeCheckbox}
+      />,
+      <FormComponent 
+        inputs={["travel", "directContact", "work"]}
+        title={"Contact"}
+        description={"Have you been in contact"}
+        changeCheckbox={this.changeCheckbox}
+        multiple={true}
+        symptonsState={this.state.symptons}
+        />,
+      <FormComponent
+        inputs={["highBloodPressure", "extremeObesity", "asthma", "heartProblems"]}
+        title={"Preexisting conditions"}
+        description={"Do you have any of these pre existing conditions?"} 
+        changeCheckbox={this.changeCheckbox}
+        multiple={true}
+        symptonsState={this.state.symptons} />,
+      <Results symptons={this.state.symptons} />
+    ];
     let { severeBreathing, severeFever, severePressure, cough, fever, travel, directContact, work, highBloodPressure, asthma, extremeObesity, heartProblems, highRiskAge } = this.state.symptons;
     return (
       <div>
@@ -287,7 +249,7 @@ class SymptonChecker extends Component<{}, State> {
           <span>{severeFever && "Patient has severeFever"}</span>          
           <span>{severePressure && "Patient has severePressure"}</span>
         </div>
-        {this.currentForm()}
+        {this.currentForm(formSteps)}
       </div>
     )
   }
